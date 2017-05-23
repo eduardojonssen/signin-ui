@@ -1,33 +1,30 @@
 import React from "react";
 import { BrowserRouter } from 'react-router-dom';
 
+import * as api from '../../js/connect.js'; 
+
 export class LoginForm extends React.Component {
     constructor(props) {
         super(props);
-        this.checkLoginStatus = this.checkLoginStatus.bind(this);
-        this.onRequestLogin = this.onRequestLogin.bind(this);
+        this.onLoginRequest = this.onLoginRequest.bind(this);
+        this.onLoginComplete = this.onLoginComplete.bind(this);
     }
-    checkLoginStatus() {
-        "use strict";
-        var url = "http://dlp-qrservices.cloudapp.net:20112/api/authorize" + this.props.location.search;
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4) {
-                var response = JSON.parse(xhr.responseText);
-                if (response) {
+    onLoginComplete(response) {
+        if (response) {
+            if(response.success == true) {
+                api.authorize(this.props.location.search, (response) => {
                     if(response.success == true) {
                         if(response.status === 'connected') {
                             window.location = response.redirectUri + '?code=' + response.authorizationCode;
-                            //this.props.history.push(response.redirectUri + '?code=' + response.authorizationCode);
                         }
                         else if(response.status === 'notAuthorized') {
-
+                            this.props.history.push('/approve' + this.props.location.search);
                         }
                         else if(response.status === 'notConnected') {
-
+                            this.props.history.push('/signin' + this.props.location.search);
                         }
                         else if(response.status === 'pendingData') {
-                            
+                            this.props.history.push('/pending' + this.props.location.search);
                         }
                     }
                     else {
@@ -39,48 +36,24 @@ export class LoginForm extends React.Component {
                         document.getElementById("uxLblError").innerHTML = msg;
                         document.getElementById("uxLblError").classList.remove("hidden");
                     }
+                });
+            }
+            else {
+                let msg = '<ul>';
+                for(let i = 0; i < response.operationReport.length; i++) {
+                    msg += '<li><b>' + response.operationReport[i].field + ':</b> ' + response.operationReport[i].message + '</li>';
                 }
+                msg += '</ul>';
+                document.getElementById("uxLblError").innerHTML = msg;
+                document.getElementById("uxLblError").classList.remove("hidden");
             }
         }
-        xhr.open('GET', url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.withCredentials = true;
-        xhr.send();
     }
-    onRequestLogin(e) {
+    onLoginRequest(e) {
         "use strict";
         e.preventDefault();
         document.getElementById("uxLblError").classList.add("hidden");
-        var url = e.target.action;
-        var formData = {};
-        var data = $(e.target).serializeArray();
-        for(let i = 0; i < data.length; i++) {
-            formData[data[i].name] = data[i].value;
-        }
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4) {
-                var response = JSON.parse(xhr.responseText);
-                if (response) {
-                    if(response.success == true) {
-                        this.checkLoginStatus();
-                    }
-                    else {
-                        let msg = '<ul>';
-                        for(let i = 0; i < response.operationReport.length; i++) {
-                            msg += '<li><b>' + response.operationReport[i].field + ':</b> ' + response.operationReport[i].message + '</li>';
-                        }
-                        msg += '</ul>';
-                        document.getElementById("uxLblError").innerHTML = msg;
-                        document.getElementById("uxLblError").classList.remove("hidden");
-                    }
-                }
-            }
-        }
-        xhr.open(e.target.method, url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.withCredentials = true;
-        xhr.send(JSON.stringify(formData));
+        api.signin(this.props.location.search, e.target, this.onLoginComplete);
     }
     render() {
         return (
@@ -90,9 +63,8 @@ export class LoginForm extends React.Component {
                     <p className="note">Você está no ambiente seguro FlipConnect. Autentique-se para acessar sua conta.</p>
                 </center>
                 <div id="uxLblError" className="alert alert-danger hidden">
-                    Erro
                 </div>
-                <form action={"http://dlp-qrservices.cloudapp.net:20112/api/signin" + this.props.location.search}  method="POST" onSubmit={this.onRequestLogin}>
+                <form method="POST" onSubmit={this.onLoginRequest}>
                     <div className="form-group">
                         <div className="input-group">
                             <span className="input-group-addon" id="usename-addon"><span className="glyphicon glyphicon-envelope" aria-hidden="true"></span></span>
