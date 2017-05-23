@@ -6,6 +6,7 @@ var DIST_DIR = path.resolve(__dirname, "dist");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 var config = {
+    //devtool: 'source-map',
     entry: SRC_DIR + "/app/index.js",
     output: {
         path: DIST_DIR + "/app",
@@ -44,6 +45,17 @@ var config = {
         ]
     },
     plugins: [
+        // new webpack.optimize.OccurrenceOrderPlugin(),
+        // new webpack.DefinePlugin({
+        //     'process.env': {
+        //         'NODE_ENV': JSON.stringify('production')
+        //     }
+        // }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compressor: {
+        //         warnings: false
+        //     }
+        // }),
         new ExtractTextPlugin('style.css'),
         new webpack.ProvidePlugin({
             jQuery: 'jquery',

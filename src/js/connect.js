@@ -1,0 +1,4 @@
+function checkLoginStatus() {
+    "use strict";
+        
+}

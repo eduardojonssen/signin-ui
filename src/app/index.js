@@ -1,26 +1,24 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+import { Root } from './components/Root';
+import { LoginForm } from './components/LoginForm';
+import { ApproveForm } from './components/ApproveForm';
 
 import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap-theme.min.css';
 
 require('../css/style.css');
 
-class App extends React.Component {
-    render() {
-        return(
-            <div>
-                <div className="container">
-                    <div className="row">
-                        <div className="col-sm-8 col-sm-offset-2 col-xs-12 col-xs-offset-0">
-                            FlipConnect
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
-
-render(<App/>, document.getElementById('app'));
+render((
+    <Router>
+        <Root>
+            <Route exact path="/" component={LoginForm} />
+            <Route path="/signin" component={LoginForm} />
+            <Route path="/approve" component={ApproveForm} />
+        </Root>
+    </Router>
+), document.getElementById('app'));
