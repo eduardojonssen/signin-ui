@@ -11,7 +11,10 @@ body {
     margin: 10px;
 }
 .button {
-    min-width: 150px;
+    min-width: 140px;
+}
+.button-spaced {
+    margin: 10px 5px;
 }
 .note {
     font-size: smaller;
@@ -26,4 +29,22 @@ body {
 }
 .hidden {
     display: none;
+}
+.permissionsArea {
+    margin: 10px;
+}
+.permissionCategory {
+    font-weight: bold;
+    margin-top: 10px;
+}
+.permissionCategoryDetails {
+    font-size: small;
+    font-style: italic;
+    color: #888888;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+.permissionsActionButtons {
+    text-align: center;
+    padding: 10px 0px;
 }
