@@ -13,6 +13,9 @@ export class ApproveForm extends React.Component {
             permissions: []
         }
     }
+    denyPermissions() {
+        window.location = api.queryParameters().redirectUri + '?reason=userAborted';
+    }
     componentDidMount() {
         fetch('http://dlp-qrservices.cloudapp.net:20114/system/merchants/' + api.queryParameters().clientId + '/settings')
         .then((response) => {
@@ -72,11 +75,11 @@ export class ApproveForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div className="row">
                     <div className="col-xs-12">
                         <center>
-                            <input type="button" className="btn btn-danger button button-spaced" value="Negar" onclick="denyPermissions();"/>                            
-                            <input type="button" className="btn btn-success button button-spaced" value="Aprovar" onclick="approvePermissions();"/>
+                            <input type="button" className="btn btn-danger button button-spaced" value="Negar" onClick={this.denyPermissions.bind(this)}/>                            
+                            <input type="button" className="btn btn-success button button-spaced" value="Aprovar"/>
                         </center>
                     </div>
                 </div>
