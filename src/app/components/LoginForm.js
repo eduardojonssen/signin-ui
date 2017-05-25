@@ -1,28 +1,14 @@
 import React from "react";
-import { BrowserRouter } from 'react-router-dom';
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
-import * as api from '../../js/connect.js'; 
+import * as api from '../../js/connect.js';
 
 export class LoginForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            merchantName: null,
-            logoUrl: null
-        }
         this.onLoginRequest = this.onLoginRequest.bind(this);
         this.onLoginComplete = this.onLoginComplete.bind(this);
-    }
-    componentDidMount() {
-        fetch('http://dlp-qrservices.cloudapp.net:20114/system/merchants/' + api.queryParameters().clientId + '/settings')
-        .then((response) => {
-            return response.json();
-        }).then((response) => {
-            this.setState({
-                merchantName: response.settings.merchantName,
-                logoUrl: response.settings.logoUrl
-            });
-        });
     }
     onLoginComplete(response) {
         if (response) {
@@ -75,7 +61,7 @@ export class LoginForm extends React.Component {
             <div>
                 <center>
                     <h4>Informe seus dados de acesso</h4>
-                    <p className="note">Você está no ambiente seguro FlipConnect. {this.state && this.state.merchantName && <b>{this.state.merchantName}</b>} precisa que você se autentique para continuar.</p>
+                    <p className="note">Você está no ambiente seguro FlipConnect. <b>{this.props.merchant.name}</b> precisa que você se autentique para continuar.</p>
                 </center>
                 <div id="uxLblError" className="alert alert-danger hidden">
                 </div>
@@ -109,3 +95,11 @@ export class LoginForm extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        merchant: state
+    };
+};
+
+export default withRouter(connect(mapStateToProps, {})(LoginForm));

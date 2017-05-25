@@ -1,12 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Provider } from "react-redux";
 
-import { Root } from './components/Root';
-import { Authorize } from './components/Authorize';
-import { SignOut } from './components/SignOut';
-import { LoginForm } from './components/LoginForm';
-import { ApproveForm } from './components/ApproveForm';
+import App from "./containers/App";
+import store from "./store";
 
 import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
@@ -16,12 +13,7 @@ import 'bootstrap/dist/css/bootstrap-theme.min.css';
 require('../css/style.css');
 
 render((
-    <Router>
-        <Root>
-            <Route exact path="/" component={Authorize} />
-            <Route path="/signin" component={LoginForm} />
-            <Route path="/signout" component={SignOut} />
-            <Route path="/approve" component={ApproveForm} />
-        </Root>
-    </Router>
+    <Provider store={store}>
+        <App />
+    </Provider>
 ), document.getElementById('app'));

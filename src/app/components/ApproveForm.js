@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
 import * as api from '../../js/connect.js'; 
 
@@ -17,15 +18,15 @@ export class ApproveForm extends React.Component {
         window.location = api.queryParameters().redirectUri + '?reason=userAborted';
     }
     componentDidMount() {
-        fetch('http://dlp-qrservices.cloudapp.net:20114/system/merchants/' + api.queryParameters().clientId + '/settings')
-        .then((response) => {
-            return response.json();
-        }).then((response) => {
-            this.setState({
-                merchantName: response.settings.merchantName,
-                logoUrl: response.settings.logoUrl
-            });
-        });
+        // fetch('http://dlp-qrservices.cloudapp.net:20114/system/merchants/' + api.queryParameters().clientId + '/settings')
+        // .then((response) => {
+        //     return response.json();
+        // }).then((response) => {
+        //     this.setState({
+        //         merchantName: response.settings.merchantName,
+        //         logoUrl: response.settings.logoUrl
+        //     });
+        // });
 
         fetch('http://dlp-qrservices.cloudapp.net:20114/system/merchants/' + api.queryParameters().clientId + '/permissions', {headers : {'Accept-Language': 'pt-BR'}})
         .then((response) => {
@@ -64,7 +65,7 @@ export class ApproveForm extends React.Component {
             <div>
                 <center>
                     <h4>Precisamos da sua permissão</h4>
-                    <p className="note">Olá {this.state && <b>{this.state.name}</b>}! {this.state && <b>{this.state.merchantName}</b>} precisa da sua permissão para acessar as seguintes informações:</p>
+                    <p className="note">Olá {this.state && <b>{this.state.name}</b>}! <b>{this.props.merchant.name}</b> precisa da sua permissão para acessar as seguintes informações:</p>
                 </center>
                 <div id="uxLblError" className="alert alert-danger hidden">
                 </div>
@@ -87,3 +88,11 @@ export class ApproveForm extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        merchant: state
+    };
+};
+
+export default withRouter(connect(mapStateToProps, {})(ApproveForm));
