@@ -45,7 +45,7 @@ export class ApproveForm extends React.Component {
                             </div>
                             <div className="row">
                                 <div className="col-xs-12 permissionCategoryDetails">
-                                    {data.mandatoryFieldsFriendlyName + ', '}
+                                    {(data.mandatoryFieldsFriendlyName + ",").toString().replace(/,/, ", ").replace(/,\s*$/, "")}
                                 </div>
                             </div>
                         </div>
