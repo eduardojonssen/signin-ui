@@ -36,7 +36,7 @@ export class ApproveForm extends React.Component {
             const list = response.merchantPermissionDataCollection;            
             const dataList = list.map(data => {
                 return (
-                    <div className="row" style={{'borderBottom': '1px solid #eeeeee'}}>
+                    <div className="row" key={data.categoryFriendlyName} style={{'borderBottom': '1px solid #eeeeee'}}>
                         <div className="col-xs-10">
                             <div className="row">
                                 <div className="col-xs-12 permissionCategory">
@@ -65,7 +65,7 @@ export class ApproveForm extends React.Component {
             <div>
                 <center>
                     <h4>Precisamos da sua permissão</h4>
-                    <p className="note">Olá {this.state && <b>{this.state.name}</b>}! <b>{this.props.merchant.name}</b> precisa da sua permissão para acessar as seguintes informações:</p>
+                    <p className="note">Olá <b>{this.props.merchant.user}</b>! <b>{this.props.merchant.name}</b> precisa da sua permissão para acessar as seguintes informações:</p>
                 </center>
                 <div id="uxLblError" className="alert alert-danger hidden">
                 </div>

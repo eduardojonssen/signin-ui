@@ -20,8 +20,19 @@ export class App extends React.Component {
         .then((response) => {
             return response.json();
         }).then((response) => {
-            this.props.setMerchantName(response.settings.merchantName);
-            this.props.setMerchantLogoUrl(response.settings.logoUrl);
+            if(response && response.settings) {
+                this.props.setMerchantName(response.settings.merchantName);
+                this.props.setMerchantLogoUrl(response.settings.logoUrl);
+            }
+        });
+
+        fetch('http://dlp-qrservices.cloudapp.net:20115/user/account', {credentials: 'include'})
+        .then((response) => {
+            return response.json();
+        }).then((response) => {
+            if(response && response.account && response.account.name) {
+                this.props.setUserName(response.account.name);
+            }
         });
     }
     render() {
@@ -56,6 +67,12 @@ const mapDispatchToProps = (dispatch) => {
             dispatch({
                 type: "SET_MERCHANT_LOGOURL",
                 payload: url
+            });
+        },
+        setUserName: (name) => {
+            dispatch({
+                type: "SET_USER_NAME",
+                payload: name
             });
         }
     };

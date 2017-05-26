@@ -1,6 +1,7 @@
 const merchantReducer = (state = {
     name: "",
-    logoUrl: ""
+    logoUrl: "",
+    user: ""
 }, action) => {
     switch (action.type) {
         case "SET_MERCHANT_NAME":
@@ -13,6 +14,12 @@ const merchantReducer = (state = {
             state = {
                 ...state,
                 logoUrl: action.payload
+            };
+            break;
+        case "SET_USER_NAME":
+            state = {
+                ...state,
+                user: action.payload
             };
             break;
     }
